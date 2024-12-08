@@ -2,13 +2,12 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-header',
   standalone: true,
   imports: [RouterOutlet, RouterLink],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.css'
 })
+export class HeaderComponent {
 
-export class AppComponent {
-  title = 'bestProject';
 }
