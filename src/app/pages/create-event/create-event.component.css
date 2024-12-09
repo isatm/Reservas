@@ -1,0 +1,7 @@
+.col{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1%;
+    max-width: 50%;
+}
