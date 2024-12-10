@@ -1,0 +1,33 @@
+<div class="container-register">  
+  <div class="title">
+      <h1>Sign-in</h1>
+  </div>
+  <div class="input-group mb-3">
+    <input type="text" id="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+  </div>
+
+  <div class="mb-3">
+    <input type="password" id="password" class="form-control" placeholder="password" id="exampleInputPassword1">
+  </div>
+
+  <div class="input-group mb-3">
+    <input type="email"  id="email" class="form-control" placeholder="correo" >
+  </div>
+
+
+  <div class="dropdown mb-3">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+      Selecciona un Rol
+    </button>
+    <ul class="dropdown-menu" id="roleDropdownMenu">
+      <li><a class="dropdown-item" data-value="regular">Regular</a></li>
+      <li><a class="dropdown-item" data-value="administrador">Administrador</a></li>
+    </ul>
+    <input type="hidden" id="role" name="role"> <!-- Input oculto para almacenar el valor del rol seleccionado -->
+  </div>
+
+  <!-- Botón para enviar los datos -->
+  <div class="button-sign">
+    <button (click)="register()">Sign</button>
+  </div>  
+</div>

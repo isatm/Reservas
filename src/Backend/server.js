@@ -3,7 +3,7 @@ import mysql from 'mysql';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { dbConnect } from './config/db.js';
-
+import userRoutes from './Routes/user.routes.js'; 
 const app = express();
 
 // Middleware
@@ -20,11 +20,15 @@ dbConnect()
     process.exit(1); // Finaliza la aplicación si falla la conexión
   });
 
+  app.use('/api', userRoutes);
 // Inicia el servidor
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
+
+
 
 
 /*

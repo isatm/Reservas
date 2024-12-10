@@ -13,6 +13,6 @@ export const dbConnect = async () => {
     return connection;
   } catch (error) {
     console.error('Error al conectar a la base de datos:', error.message);
-    throw error; // Lanzamos el error para que se pueda manejar en server.js
+    throw error; 
   }
 };
