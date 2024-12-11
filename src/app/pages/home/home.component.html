@@ -37,7 +37,36 @@
         <span class="visually-hidden">Next</span>
         </button>
     </div>
+    <div>
+      <h2>Filtrar Eventos</h2>
+    
+      <form (ngSubmit)="buscarEventos()">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" [(ngModel)]="nombre" name="nombre">
 
+        <label for="ubicacion">Ubicación:</label>
+        <input type="text" id="ubicacion" [(ngModel)]="ubicacion" name="ubicacion">
+    
+        <label for="fechaInicio">Fecha Inicio:</label>
+        <input type="date" id="fechaInicio" [(ngModel)]="fechaInicio" name="fechaInicio">
+    
+        <label for="fechaFin">Fecha Fin:</label>
+        <input type="date" id="fechaFin" [(ngModel)]="fechaFin" name="fechaFin">
+    
+        <button type="submit">Buscar</button>
+      </form>
+    
+      <div *ngIf="eventos.length > 0">
+        <h3>Resultados:</h3>
+        <ul>
+          <li *ngFor="let evento of eventos">
+            <h4>{{ evento.nombre }}</h4>
+            <p>{{ evento.categoria }} - {{ evento.ubicacion }}</p>
+            <p>{{ evento.fecha_inicio }} - {{ evento.fecha_fin }}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
     <div class="events">
       <div *ngFor="let event of evento" class="card">
         <div class="card-body">
