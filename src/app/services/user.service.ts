@@ -20,4 +20,12 @@ import { Observable } from 'rxjs';
     loginUsuario(usuario: any): Observable<any> {
     return this.http.post(this.apiUrl2, usuario); // Realiza un POST al endpoint
     }
+
+    guardarToken(token: string): void {
+      localStorage.setItem('token', token); // Guardar el token en el localStorage
+    }
+  
+    obtenerToken(): string | null {
+      return localStorage.getItem('token'); // Obtener el token almacenado
+    }
 } 

@@ -1,11 +1,19 @@
-// controllers/evento.controller.js
-
 import { dbConnect } from '../config/db.js';
+import jwt from 'jsonwebtoken';  // Para decodificar el token
 
 export const crearEvento = async (req, res) => {
-  const { nombre, descripcion, fechaInicio, fechaFinal, precio} = req.body;
+  const { nombre, descripcion, fechaInicio, fechaFinal, precio } = req.body;
+  const token = req.headers['authorization']?.split(' ')[1]; // Obtener el token del encabezado
+
+  if (!token) {
+    return res.status(401).json({ error: 'No se ha proporcionado un token de autenticación' });
+  }
 
   try {
+    // Verificar y decodificar el token
+    const decoded = jwt.verify(token, 'tu_clave_secreta');  // 'mi_secreto' es la clave que usas para firmar el token
+    const userId = decoded.id;  // Suponiendo que el id del usuario está en el payload del token
+
     // Conectar a la base de datos
     const connection = await dbConnect();
 
@@ -17,10 +25,19 @@ export const crearEvento = async (req, res) => {
     const values = [nombre, descripcion, fechaInicio, fechaFinal, precio];
     const [result] = await connection.execute(sql, values);
 
-    res.status(200).json({ message: 'Evento creado exitosamente', id: result.insertId });
+    const eventoId = result.insertId;
+
+    // Insertar el organizador (usuario que creó el evento) en la tabla intermedia Organizadores
+    const sqlOrganizador = `
+      INSERT INTO Organizadores (org_evento, org_organizador)
+      VALUES (?, ?)
+    `;
+    await connection.execute(sqlOrganizador, [eventoId, userId]);
+
+    res.status(200).json({ message: 'Evento creado exitosamente', id: eventoId });
   } catch (err) {
-    console.error('Error al insertar el evento:', err);
-    res.status(500).json({ error: 'Error al insertar el evento' });
+    console.error('Error al insertar el evento:', err.message);
+    res.status(500).json({ error: 'Error al insertar el evento', details: err.message });
   }
 };
 

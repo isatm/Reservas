@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { EventoService } from '../../services/evento.service';
+import { HttpClientModule } from '@angular/common/http'; 
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-create-event',
@@ -17,8 +17,15 @@ export class CreateEventComponent {
   fechaInicio: string = '';
   fechaFinal: string = '';
   precio: number = 0;
+  organizadores: number[] = [];
 
   constructor(private eventoService: EventoService) {}
+
+  agregarOrganizador(id: number): void {
+    if (!this.organizadores.includes(id)) {
+      this.organizadores.push(id); // Añadir organizador al array
+    }
+  }
 
   crearEvento(): void {
     const evento = {
@@ -29,6 +36,15 @@ export class CreateEventComponent {
       precio: this.precio,
     };
 
+    // Obtener el token de localStorage
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('No estás autenticado');
+      return;
+    }
+
+    // Llamar al servicio para crear el evento, pasando el token en los encabezados
     this.eventoService.crearEvento(evento).subscribe(
       (response) => {
         console.log('Evento creado exitosamente:', response);

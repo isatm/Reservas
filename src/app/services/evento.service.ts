@@ -1,7 +1,5 @@
-// src/app/services/evento.service.ts
-
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,9 +11,32 @@ export class EventoService {
   constructor(private http: HttpClient) {}
 
   crearEvento(evento: any): Observable<any> {
-    return this.http.post(this.apiUrl, evento); // Realiza un POST al endpoint
+    // Obtener el token de localStorage
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('No se encontró un token de autenticación');
+    }
+
+    // Crear los encabezados con el token
+    const headers = { Authorization: `Bearer ${token}` };
+
+    // Realizar el POST con el token en los encabezados
+    return this.http.post(this.apiUrl, evento, { headers });
   }
-  obtenerEvento(): Observable<Event[]> {
-    return this.http.get<Event[]>(this.apiUrl);
+
+  obtenerEvento(): Observable<any> {
+    // Obtener el token de localStorage
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('No se encontró un token de autenticación');
+    }
+
+    // Crear los encabezados con el token
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    // Realizar el GET con el token en los encabezados
+    return this.http.get<Event[]>(this.apiUrl, { headers });
   }
 }

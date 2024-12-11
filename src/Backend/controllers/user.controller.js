@@ -1,5 +1,8 @@
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { dbConnect } from '../config/db.js';
+
+const SECRET_KEY = 'tu_clave_secreta';
 
 export const crearUsuario = async (req, res) => {
   const { username, password, correo, role } = req.body;
@@ -34,7 +37,7 @@ export const iniciarSesion = async (req, res) => {
     const connection = await dbConnect();
 
     // Consulta SQL para buscar el usuario por nombre de usuario
-    const sql = `SELECT usu_nombre, usu_contrasena FROM Usuarios WHERE usu_nombre = ?`;
+    const sql = `SELECT usu_id, usu_nombre, usu_contrasena FROM Usuarios WHERE usu_nombre = ?`;
     const [rows] = await connection.execute(sql, [username]);
 
     if (rows.length === 0) {
@@ -50,9 +53,22 @@ export const iniciarSesion = async (req, res) => {
       return res.status(401).json({ error: 'Contraseña incorrecta' });
     }
 
-    res.status(200).json({ message: 'Inicio de sesión exitoso' });
+    // Si las credenciales son correctas, generamos el token
+    const token = jwt.sign(
+      { id: user.usu_id, username: user.usu_nombre }, // Información del usuario para incluir en el token
+      SECRET_KEY, // La clave secreta para firmar el token
+      { expiresIn: '1h' } // El token expira en 1 hora (puedes ajustar este tiempo)
+    );
+
+    // Enviar el token al frontend
+    res.status(200).json({
+      message: 'Inicio de sesión exitoso',
+      token: token, // Enviar el token generado
+    });
+
   } catch (err) {
     console.error('Error al iniciar sesión:', err);
     res.status(500).json({ error: 'Error al iniciar sesión' });
   }
 };
+

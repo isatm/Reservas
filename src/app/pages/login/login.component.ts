@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router'; // Importa Router
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ export class LoginComponent {
   username: string = '';
   password: string = '';
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private router: Router) {} // Inyecta el router
 
   loginUsuario(): void {
     const user = {
@@ -26,7 +27,11 @@ export class LoginComponent {
     this.userService.loginUsuario(user).subscribe(
       (response) => {
         console.log('Sesión iniciada exitosamente:', response);
+        this.userService.guardarToken(response.token);
         alert('Sesión iniciada exitosamente');
+        
+        // Redirige al home
+        this.router.navigate(['/home']); 
       },
       (error) => {
         console.error('Error al iniciar sesión:', error);
@@ -35,3 +40,4 @@ export class LoginComponent {
     );
   }
 }
+
