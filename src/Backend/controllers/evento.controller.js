@@ -43,19 +43,66 @@ export const crearEvento = async (req, res) => {
 
 export const obtenerEvento = async (req, res) => {
   try {
-    // Conectar a la base de datos
+    const token = req.headers['authorization']?.split(' ')[1];
+    let userId = null;
+
+    // Si el parámetro 'user' está presente, intentamos obtener el userId del token
+    if (req.query.user && token) {
+      const decoded = jwt.verify(token, 'tu_clave_secreta');  // 'mi_secreto' es la clave que usas para firmar el token
+      userId = decoded.id;
+    }
+
     const connection = await dbConnect();
 
-    // Consulta SQL para obtener todos los eventos
-    const sql = `SELECT eve_nombre, eve_descripcion FROM Eventos`;
-    const [rows] = await connection.execute(sql);
-    if (rows.length === 0) {
-      return res.status(200).json({ message: 'No hay eventos disponibles.' });
+    let sql;
+    let values = [];
+
+    if (userId) {
+      // Si el usuario está autenticado, filtrar eventos solo para ese usuario
+      sql = `
+        SELECT e.eve_id, e.eve_nombre, e.eve_descripcion, e.eve_precio
+        FROM Eventos e
+        JOIN Organizadores o ON e.eve_id = o.org_evento
+        WHERE o.org_organizador = ?
+      `;
+      values = [userId];
+    } else {
+      // Si no está autenticado, mostrar todos los eventos
+      sql = `
+        SELECT e.eve_id, e.eve_nombre, e.eve_descripcion, e.eve_precio
+        FROM Eventos e
+      `;
     }
-    // Enviar los eventos como respuesta
+
+    const [rows] = await connection.execute(sql, values);
+
+    if (rows.length === 0) {
+      return res.status(200).json({ message: userId ? 'No hay eventos disponibles para este usuario.' : 'No hay eventos disponibles.' });
+    }
+
     res.status(200).json(rows);
   } catch (err) {
     console.error('Error al obtener los eventos:', err);
     res.status(500).json({ error: 'Error al obtener los eventos' });
+  }
+};
+
+export const obtenerEventoPorId = async (req, res) => {
+  try {
+    const { id } = req.params; // Obtén el ID de los parámetros de la URL
+    const connection = await dbConnect();
+
+    // Consulta SQL para obtener un evento específico por ID
+    const sql = `SELECT * FROM Eventos WHERE eve_id = ?`;
+    const [rows] = await connection.execute(sql, [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Evento no encontrado' });
+    }
+
+    res.status(200).json(rows[0]); // Devuelve el evento encontrado
+  } catch (err) {
+    console.error('Error al obtener el evento:', err);
+    res.status(500).json({ error: 'Error al obtener el evento' });
   }
 };

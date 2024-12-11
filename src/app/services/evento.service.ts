@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams  } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root', // Hace que este servicio esté disponible en toda la aplicación
 })
 export class EventoService {
-  private apiUrl = 'http://localhost:3000/eventos'; // URL del servidor Express
+  private apiUrl = 'http://localhost:3000/eventos'; 
+  private apiUrl2 = 'http://localhost:3000/eventos/obtener';
+  private apiUrl3 = 'http://localhost:3000/eventos/'; 
 
   constructor(private http: HttpClient) {}
 
@@ -25,18 +27,24 @@ export class EventoService {
     return this.http.post(this.apiUrl, evento, { headers });
   }
 
-  obtenerEvento(): Observable<any> {
-    // Obtener el token de localStorage
+  // evento.service.ts
+  obtenerEvento(filtrarPorUsuario: boolean = false): Observable<any> {
     const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    let params = new HttpParams();
 
-    if (!token) {
-      throw new Error('No se encontró un token de autenticación');
+    // Si el token está presente y queremos filtrar por usuario
+    if (filtrarPorUsuario && token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+      params = params.set('user', 'true');
     }
 
-    // Crear los encabezados con el token
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // Realizar la solicitud GET con los encabezados y parámetros según corresponda
+    return this.http.get<any>(this.apiUrl2, { headers, params });
+  }
 
-    // Realizar el GET con el token en los encabezados
-    return this.http.get<Event[]>(this.apiUrl, { headers });
+
+  obtenerEventoPorId(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl3}${id}`);
   }
 }

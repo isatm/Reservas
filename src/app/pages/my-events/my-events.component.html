@@ -1,0 +1,16 @@
+<div class="events">
+    <!-- Si no hay eventos, mostrar mensaje -->
+    <div *ngIf="noEvents" class="alert alert-info">
+      No hay eventos disponibles.
+    </div>
+  
+    <!-- Si hay eventos, mostrar la lista de eventos -->
+    <div *ngFor="let event of evento" class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{ event.eve_nombre }}</h5>
+        <p class="card-text">{{ event.eve_descripcion }}</p>
+        <p class="card-text">Precio: {{ event.eve_precio }}</p>
+        <a [routerLink]="['/event', event.eve_id]" class="btn btn-primary">Ver más</a>
+      </div>
+    </div>
+  </div>

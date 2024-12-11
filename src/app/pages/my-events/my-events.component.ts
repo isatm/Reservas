@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { CarouselComponent } from '../../components/carousel/carousel.component';
-import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { EventoService } from '../../services/evento.service';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -8,20 +6,22 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router'; 
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-my-events',
   standalone: true,
-  imports: [CarouselComponent, SearchBarComponent,HttpClientModule,FormsModule,CommonModule,RouterModule],
-  providers: [EventoService], 
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  imports: [HttpClientModule, FormsModule, CommonModule, RouterModule],
+  providers: [EventoService],
+  templateUrl: './my-events.component.html',
+  styleUrls: ['./my-events.component.css']
 })
-export class HomeComponent {
+export class MyEventsComponent {
   evento: any[] = [];
+  noEvents: boolean = false; 
 
   constructor(private EventoService: EventoService) {}
 
+  // home.component.ts
   ngOnInit(): void {
-    this.EventoService.obtenerEvento().subscribe({
+    this.EventoService.obtenerEvento(false).subscribe({
       next: (data) => {
         console.log(data);
         this.evento = data; // Guardar los datos en la variable
