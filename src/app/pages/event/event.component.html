@@ -1,20 +1,21 @@
 
-<div *ngIf="evento">
-  <h1>
-    {{ evento.eve_nombre }}
-    <span class="badge text-bg-secondary">Cat1</span>
-    <span class="badge text-bg-secondary">Cat2</span>
-    <span class="badge text-bg-secondary">Cat3</span>
-  </h1>
+<div class="eventoCont">
+  <div *ngIf="evento">
+    <h1>
+      {{ evento.eve_nombre }}
+    </h1>
 
-  <div class="card">
-    <div class="card-body">
-      <p><strong>Descripción:</strong> {{ evento.eve_descripcion }}</p>
-      <p><strong>Precio:</strong> {{ evento.eve_precio }}</p>
+    <div class="card">
+      <div class="card-body">
+        <p><strong>Descripción:</strong> {{ evento.eve_descripcion }}</p>
+        <p><strong>Precio:</strong> {{ evento.eve_precio }}</p>
+        <p><strong>fecha inicio:</strong> {{ evento.eve_fecha_inicio  | date: 'yyyy-MM-dd'}}</p>
+        <p><strong>fecha final:</strong> {{ evento.eve_fecha_final | date: 'yyyy-MM-dd' }}</p>
+      </div>
     </div>
   </div>
-</div>
 
-<div *ngIf="!evento" class="alert alert-danger">
-  Evento no encontrado o no disponible.
+  <div *ngIf="!evento" class="alert alert-danger">
+    Evento no encontrado o no disponible.
+  </div>
 </div>

@@ -1,0 +1,10 @@
+.eventoCont{
+    display: flex;
+    justify-content: center
+}
+.card {
+    margin-top: 10%;
+}
+.card-body{
+    width: 465px;
+}

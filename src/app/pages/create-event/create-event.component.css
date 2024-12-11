@@ -5,3 +5,18 @@
     padding: 1%;
     max-width: 50%;
 }
+
+.generalCreateEvent{
+    display:flex;
+    flex-direction: column;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.titulocreate{
+    display: flex;
+    justify-content: center
+}
+
+#eventBut{
+    margin-top: 5%;
+}
