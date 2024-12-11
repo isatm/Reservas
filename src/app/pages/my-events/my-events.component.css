@@ -1,0 +1,11 @@
+.events{
+    margin-left: 20px;
+    margin-top: 50px;
+    display: flex;
+}
+
+.card{
+    width: 20%;
+    height: 30%;
+    margin-left: 10px;
+}

@@ -1,0 +1,47 @@
+.generalLogin{
+    margin-left: 20%;
+    margin-right:20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.titleLogin{
+    margin-top: 10%;
+    margin-bottom: 5%;
+    display: flex;
+    justify-content: center;
+}
+.btn-primary{       
+    margin-top: 1%;
+    display: flex;
+    justify-content: center;
+    width: 132px;
+    background-color: darkorange;
+    border-color: transparent;
+}
+.form-floating > .form-control, .form-floating > .form-control-plaintext {
+    padding: 1rem 10.75rem;
+}
+.inputsLogin{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.botonlog{
+    display: flex;
+    justify-content: center;
+}
+.registroEnlace a{
+    color: #007bff;
+    text-decoration: none;
+}
+.registroEnlace{
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+}
+
+.registroEnlace a:hover {
+    text-decoration: underline;
+}

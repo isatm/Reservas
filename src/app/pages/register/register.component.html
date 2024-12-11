@@ -1,58 +1,65 @@
 <div class="container-register">  
-    <div class="title">
-        <h1>Sign-in</h1>
-    </div>
-    <div class="input-group mb-3">
-      <input 
-      type="text"
-      class="form-control"
-      placeholder="Username"
-      [(ngModel)]="username"
-      name="username"
-      required>
-    </div>
-  
-    <div class="mb-3">
-    <input 
-      type="password"
-      class="form-control"
-      placeholder="Password"
-      [(ngModel)]="password"
-      name="password"
-      required>
-    </div>
-  
-    <div class="input-group mb-3">
-      <input 
-      type="email"
-      class="form-control"
-      placeholder="Correo"
-      [(ngModel)]="correo"
-      name="correo"
-      required>
-    </div>
-  
-  
-    <div class="dropdown mb-3">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        Selecciona un Rol
-      </button>
-      <ul class="dropdown-menu" id="roleDropdownMenu">
-        <li><a class="dropdown-item" data-value="regular">Regular</a></li>
-        <li><a class="dropdown-item" data-value="administrador">Administrador</a></li>
-      </ul>
-      <input type="hidden" id="role" name="role"> <!-- Input oculto para almacenar el valor del rol seleccionado -->
-      <input 
-      type="role"
-      class="form-control"
-      placeholder="Role"
-      [(ngModel)]="role"
-      name="role"
-      required>
-    </div>
-  
-    <!-- Botón para enviar los datos -->
-    <div class="button-sign">
-      <button (click)="crearUsuario()">Sign</button>
-    </div>  
+  <div class="title">
+    <h1>Sign-in</h1>
   </div>
+  <div class="containerinputs">  
+    <div class="inputRegister">
+      <div class="input-group mb-3">
+        <input 
+          type="text"
+          class="form-control"
+          placeholder="Username"
+          [(ngModel)]="username"
+          name="username"
+          required>
+      </div>
+
+      <div class="mb-3">
+        <input 
+          type="password"
+          class="form-control"
+          placeholder="Password"
+          [(ngModel)]="password"
+          name="password"
+          required>
+      </div>
+
+      <div class="input-group mb-3">
+        <input 
+          type="email"
+          class="form-control"
+          placeholder="Correo"
+          [(ngModel)]="correo"
+          name="correo"
+          required>
+      </div>
+    </div>
+  </div>
+
+  <div class="contDrop">
+    <div class="dropdown mb-3">
+      <button 
+        class="btn btn-secondary dropdown-toggle" 
+        type="button" 
+        id="roleDropdown" 
+        data-bs-toggle="dropdown" 
+        aria-expanded="false">
+        {{ role ? role.charAt(0).toUpperCase() + role.slice(1) : 'Selecciona un Rol' }}
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="roleDropdown">
+        <li><a class="dropdown-item" (click)="selectRole('regular')">Regular</a></li>
+        <li><a class="dropdown-item" (click)="selectRole('administrador')">Administrador</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="button-sign">
+    <button 
+      type="button" 
+      class="btn btn-primary" 
+      (click)="crearUsuario()" 
+      [disabled]="isLoading">
+      {{ isLoading ? 'Creando...' : 'Sign' }}
+    </button>
+  </div>
+</div>

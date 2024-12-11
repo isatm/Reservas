@@ -18,11 +18,22 @@ export class LoginComponent {
 
   constructor(private userService: UserService, private router: Router) {} // Inyecta el router
 
+  navegarARegister() {
+    this.router.navigate(['/register']);
+  }
+  navegarAHome() {
+    this.router.navigate(['/home']);
+  }
+  
   loginUsuario(): void {
     const user = {
       username: this.username,
       password: this.password
     };
+    if (!this.username || !this.password) {
+      alert('Por favor, complete todos los campos antes de iniciar sesión.');
+      return; // Detener el flujo si los campos están vacíos
+    }
 
     this.userService.loginUsuario(user).subscribe(
       (response) => {
@@ -36,8 +47,7 @@ export class LoginComponent {
       (error) => {
         console.error('Error al iniciar sesión:', error);
         alert('Hubo un error al iniciar sesión.');
-      }
-    );
-  }
+      }
+    );
+  }
 }
-
