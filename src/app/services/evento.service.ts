@@ -9,13 +9,17 @@ import { Observable } from 'rxjs';
 })
 export class EventoService {
   private apiUrl = 'http://localhost:3000/eventos'; // URL del servidor Express
-
+  private apiUrl2 = 'http://localhost:3000/eventos/obtener';
+  private apiUrl3 = 'http://localhost:3000/eventos/'; 
   constructor(private http: HttpClient) {}
 
   crearEvento(evento: any): Observable<any> {
     return this.http.post(this.apiUrl, evento); // Realiza un POST al endpoint
   }
-  obtenerEvento(): Observable<Event[]> {
-    return this.http.get<Event[]>(this.apiUrl);
+  obtenerEvento(): Observable<Event[]> {  
+    return this.http.get<Event[]>(this.apiUrl2);
+  } 
+  obtenerEventoPorId(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl3}${id}`);
   }
 }

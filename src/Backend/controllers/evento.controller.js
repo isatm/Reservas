@@ -30,7 +30,7 @@ export const obtenerEvento = async (req, res) => {
     const connection = await dbConnect();
 
     // Consulta SQL para obtener todos los eventos
-    const sql = `SELECT eve_nombre, eve_descripcion FROM Eventos`;
+    const sql = `SELECT eve_id, eve_nombre, eve_descripcion, eve_precio FROM Eventos`;
     const [rows] = await connection.execute(sql);
     if (rows.length === 0) {
       return res.status(200).json({ message: 'No hay eventos disponibles.' });
@@ -40,5 +40,25 @@ export const obtenerEvento = async (req, res) => {
   } catch (err) {
     console.error('Error al obtener los eventos:', err);
     res.status(500).json({ error: 'Error al obtener los eventos' });
+  }
+};
+
+export const obtenerEventoPorId = async (req, res) => {
+  try {
+    const { id } = req.params; // Obtén el ID de los parámetros de la URL
+    const connection = await dbConnect();
+
+    // Consulta SQL para obtener un evento específico por ID
+    const sql = `SELECT * FROM Eventos WHERE eve_id = ?`;
+    const [rows] = await connection.execute(sql, [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Evento no encontrado' });
+    }
+
+    res.status(200).json(rows[0]); // Devuelve el evento encontrado
+  } catch (err) {
+    console.error('Error al obtener el evento:', err);
+    res.status(500).json({ error: 'Error al obtener el evento' });
   }
 };

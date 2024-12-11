@@ -5,10 +5,12 @@ import { EventoService } from '../../services/evento.service';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router'; 
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CarouselComponent, SearchBarComponent,HttpClientModule,FormsModule,CommonModule],
+  imports: [CarouselComponent, SearchBarComponent,HttpClientModule,FormsModule,CommonModule,RouterModule],
   providers: [EventoService], 
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
