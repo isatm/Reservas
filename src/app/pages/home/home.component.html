@@ -38,17 +38,50 @@
       </button>
   </div>
 
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+        </ul>
+        <form class="d-flex" (submit)="filtrarEventos($event)">
+          <input 
+            class="form-control me-2" 
+            type="search" 
+            placeholder="Buscar eventos..." 
+            aria-label="Search"
+            [(ngModel)]="busqueda"
+            name="busqueda"
+          >
+          <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+      </div>
+    </div>
+  </nav>  
+
   <div class="events">
-    <div *ngFor="let event of evento" class="card">
+    <!-- Si no hay eventos después de filtrar, mostrar mensaje -->
+    <div *ngIf="eventosFiltrados.length === 0" class="alert alert-info">
+      No hay eventos disponibles.
+    </div>
+  
+    <!-- Mostrar eventos filtrados -->
+    <div *ngFor="let event of eventosFiltrados" class="card">
       <div class="card-body">
         <h5 class="card-title">{{ event.eve_nombre }}</h5>
         <p class="card-text">{{ event.eve_descripcion }}</p>
         <p class="card-text">Precio: {{ event.eve_precio }}</p>
-        <div *ngIf="evento.length === 0" class="alert alert-info">
-          No hay eventos disponibles.
-        </div>
         <a [routerLink]="['/event', event.eve_id]" class="btn btn-primary">Ver más</a>
       </div>
     </div>
   </div>
-</div>
+  
