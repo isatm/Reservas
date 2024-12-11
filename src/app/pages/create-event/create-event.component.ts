@@ -17,7 +17,6 @@ export class CreateEventComponent {
   fechaInicio: string = '';
   fechaFinal: string = '';
   precio: number = 0;
-  imagen: string = '';
 
   constructor(private eventoService: EventoService) {}
 
@@ -28,7 +27,6 @@ export class CreateEventComponent {
       fechaInicio: this.fechaInicio,
       fechaFinal: this.fechaFinal,
       precio: this.precio,
-      imagen: this.imagen,
     };
 
     this.eventoService.crearEvento(evento).subscribe(

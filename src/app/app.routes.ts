@@ -3,10 +3,12 @@ import { CreateEventComponent } from './pages/create-event/create-event.componen
 import { HomeComponent } from './pages/home/home.component';
 import { EventComponent } from './pages/event/event.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { LoginComponent } from './pages/login/login.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'createEvent', component: CreateEventComponent},
     {path: 'event', component: EventComponent},
-    {path: 'register', component: RegisterComponent}
+    {path: 'register', component: RegisterComponent},
+    {path: 'login', component: LoginComponent}
 ];

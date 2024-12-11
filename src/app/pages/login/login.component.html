@@ -1,0 +1,11 @@
+<div class="generalLogin">
+<div class="form-floating mb-3">
+    <input type="email" class="form-control" id="floatingInput" placeholder="Username" [(ngModel)]="username" name="username" required>
+    <label for="floatingInput">Email address</label>
+  </div>
+  <div class="form-floating">
+    <input type="password" class="form-control" placeholder="Password" [(ngModel)]="password" name="password" id="floatingPassword" required>
+    <label for="floatingPassword">Password</label>
+  </div>
+  <button type="button" class="btn btn-primary" (click)="loginUsuario()">Iniciar Sesión</button>
+</div>

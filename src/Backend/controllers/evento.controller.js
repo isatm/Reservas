@@ -3,7 +3,7 @@
 import { dbConnect } from '../config/db.js';
 
 export const crearEvento = async (req, res) => {
-  const { nombre, descripcion, fechaInicio, fechaFinal, precio, imagen } = req.body;
+  const { nombre, descripcion, fechaInicio, fechaFinal, precio} = req.body;
 
   try {
     // Conectar a la base de datos
@@ -11,10 +11,10 @@ export const crearEvento = async (req, res) => {
 
     // Consulta SQL para insertar el evento
     const sql = `
-      INSERT INTO Eventos (eve_nombre, eve_descripcion, eve_fecha_inicio, eve_fecha_final, eve_precio, eve_image)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO Eventos (eve_nombre, eve_descripcion, eve_fecha_inicio, eve_fecha_final, eve_precio)
+      VALUES (?, ?, ?, ?, ?)
     `;
-    const values = [nombre, descripcion, fechaInicio, fechaFinal, precio, imagen];
+    const values = [nombre, descripcion, fechaInicio, fechaFinal, precio];
     const [result] = await connection.execute(sql, values);
 
     res.status(200).json({ message: 'Evento creado exitosamente', id: result.insertId });
