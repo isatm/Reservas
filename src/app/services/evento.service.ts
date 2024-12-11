@@ -15,4 +15,7 @@ export class EventoService {
   crearEvento(evento: any): Observable<any> {
     return this.http.post(this.apiUrl, evento); // Realiza un POST al endpoint
   }
+  obtenerEvento(): Observable<Event[]> {
+    return this.http.get<Event[]>(this.apiUrl);
+  }
 }
