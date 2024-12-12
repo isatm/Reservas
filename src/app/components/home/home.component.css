@@ -1,8 +1,4 @@
-.events{
-    margin-left: 20px;
-    margin-top: 50px;
-    display: flex;
-}
+
 
 .card{
     width: 20%;
@@ -19,4 +15,36 @@
 .carousel {
     max-width: 800px; 
     margin: auto; 
+}
+
+.contEvt{
+    display: flex;
+    margin-top: 2%;
+    margin-left: 2%;
+}
+
+.contFilt{
+    margin-top: 5%;
+    display: flex;
+    justify-content: center;
+}
+.derecha{
+    display: flex;
+    flex-direction: column;
+}
+.izquierda{
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.botoncito{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.tituloEv{
+    margin-top: 3%;
+    display: flex;
+    justify-content: center;
 }

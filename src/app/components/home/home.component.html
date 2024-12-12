@@ -28,26 +28,65 @@
       <span class="visually-hidden">Next</span>
     </button>
   </div>
+<!--  
 
-  <div class="search-bar mt-4">
-    <form class="d-flex justify-content-center" (submit)="filtrarEventos($event)">
-      <input 
-        class="form-control me-2 w-50" 
-        type="search" 
-        placeholder="Buscar eventos..." 
-        aria-label="Search"
-        [(ngModel)]="busqueda"
-        name="busqueda"
-      >
-      <button class="btn btn-outline-success" type="submit">Buscar</button>
-    </form>
-  </div>
-
-  <div class="events mt-4">
-    <div *ngIf="eventosFiltrados.length === 0" class="alert alert-info">
-      No hay eventos disponibles.
-    </div>
+  <form (ngSubmit)="filtrarEventos()" >
+  <div class="contFilt">
+    <div class="derecha">
+      
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" [(ngModel)]="nombre" name="nombre">
   
+    <label for="precio">Precio:</label>
+    <input type="text" id="precio" [(ngModel)]="precio" name="precio">
+  </div>
+  <div class="izquierda">
+    <label for="fechaInicio">Fecha Inicio:</label>
+    <input type="date" id="fechaInicio" [(ngModel)]="fechaInicio" name="fechaInicio">
+  
+    <label for="fechaFin">Fecha Fin:</label>
+    <input type="date" id="fechaFin" [(ngModel)]="fechaFin" name="fechaFin">
+  </div>
+</div>
+  <div class="botoncito">
+    <button type="submit" class="btn btn-primary">Buscar</button>
+  </div>
+  </form>
+  -->
+
+  <!-- eventos.component.html -->
+<form (ngSubmit)="filtrarEventos()" class="container mt-5">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" [(ngModel)]="nombre" name="nombre" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="precio">Precio:</label>
+        <input type="text" id="precio" [(ngModel)]="precio" name="precio" class="form-control">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="fechaInicio">Fecha Inicio:</label>
+        <input type="date" id="fechaInicio" [(ngModel)]="fechaInicio" name="fechaInicio" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="fechaFin">Fecha Fin:</label>
+        <input type="date" id="fechaFin" [(ngModel)]="fechaFin" name="fechaFin" class="form-control">
+      </div>
+    </div>
+  </div>
+  <div class="text-center mt-4">
+    <button type="submit" class="btn btn-primary">Buscar</button>
+  </div>
+</form>
+
+  <div class="tituloEv">
+    <h1>Eventos</h1>
+  </div>
+  <div *ngIf="eventosFiltrados.length > 0" class="contEvt">
     <div *ngFor="let event of eventosFiltrados" class="card">
       <div class="card-body">
         <h5 class="card-title">{{ event.eve_nombre }}</h5>
@@ -57,4 +96,6 @@
       </div>
     </div>
   </div>
-</div>
+  <div *ngIf="eventosFiltrados.length === 0">
+    <p>No se encontraron eventos con los criterios especificados.</p>
+  </div>

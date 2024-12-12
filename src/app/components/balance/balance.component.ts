@@ -15,6 +15,7 @@ export class BalanceComponent implements OnInit {
   saldo: number = 0;
   monto: number = 0;
   reservas: any[] = [];
+  userId: string = '';
 
   constructor(private userService: UserService, private eventoService: EventoService) {}
 
@@ -61,13 +62,17 @@ export class BalanceComponent implements OnInit {
   }
 
   obtenerReservasUsuario(): void {
-    this.eventoService.obtenerReservasUsuario().subscribe(
-      data => {
-        this.reservas = data;
-      },
-      error => {
-        console.error('Error fetching reservas', error);
-      }
-    );
+    if (this.userId) {
+      this.eventoService.obtenerReservasUsuario(this.userId).subscribe(
+        data => {
+          this.reservas = data;
+        },
+        error => {
+          console.error('Error fetching reservas', error);
+        }
+      );
+    } else {
+      console.error('User ID is not available');
+    }
   }
 }

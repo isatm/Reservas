@@ -45,9 +45,24 @@ export class EventoService {
     return this.http.post(`${this.apiUrl}/${eventId}/reservas`, {}, { headers });
   }
 
-  obtenerReservasUsuario(): Observable<any> {
+  obtenerReservasUsuario(userId: string): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any>(`${this.apiUrl}/reservas`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/reservas/${userId}`, { headers });
+  }
+  
+  filtrarEventos(filtros: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No se encontró un token de autenticación');
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    console.log('Filtros enviados al servicio:', filtros); // Agrega este log para verificar los valores enviados
+
+    return this.http.post<any>(`${this.apiUrl}/filter`, filtros, { headers });
   }
 }
+
+

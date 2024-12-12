@@ -141,9 +141,8 @@ export const crearReserva = async (req, res) => {
 };
 
 export const obtenerReservasUsuario = async (req, res) => {
-  const userId = req.user.id;
-
   try {
+    const { id } = req.params; // Obtén el ID del usuario desde los parámetros de la URL
     const connection = await dbConnect();
 
     const sql = `
@@ -152,7 +151,11 @@ export const obtenerReservasUsuario = async (req, res) => {
       JOIN Eventos e ON r.res_evento = e.eve_id
       WHERE r.res_usuario = ? AND r.res_cancelada = 0;
     `;
-    const [rows] = await connection.execute(sql, [userId]);
+    const [rows] = await connection.execute(sql, [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron reservas para este usuario' });
+    }
 
     res.status(200).json(rows);
   } catch (err) {
@@ -177,12 +180,12 @@ export const filtrar = async (req, res) => {
     }
 
     if (fechaInicio != null && fechaInicio  != undefined) {
-      sql += ' AND eve_fecha >= ?';
+      sql += ' AND eve_fecha_inicio >= ?';
       params.push(fechaInicio);
     }
 
     if (fechaFinal != null && fechaFinal != undefined) {
-      sql += ' AND eve_fecha <= ?';
+      sql += ' AND eve_fecha_final <= ?';
       params.push(fechaFinal);
     }
 
@@ -203,3 +206,4 @@ export const filtrar = async (req, res) => {
     res.status(500).json({ error: 'Error al filtrar los eventos' });
   }
 };
+
