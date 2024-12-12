@@ -9,13 +9,16 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());  
+app.use(express.json()); // Este middleware es crucial para solicitudes con cuerpo JSON
+
 
 // Usar las rutas de eventos
 app.use(eventoRoutes); 
-app.use(userRoutes);
+app.use(userRoutes); 
+
 
 // Inicia el servidor
 const PORT = 3000;
-app.listen(PORT, () => {
+app.listen(PORT, () => {  
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

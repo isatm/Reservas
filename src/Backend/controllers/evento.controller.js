@@ -106,3 +106,24 @@ export const obtenerEventoPorId = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener el evento' });
   }
 };
+
+export const filtrar = async (req, res) => {
+  console.log('req.body');
+  try {
+    const { nombre, fechaInicio, fechafinal, precio } = req.body; // Obtén el nombre de los parámetros de la consulta
+    const connection = await dbConnect();
+
+    // Consulta SQL para obtener eventos por nombre
+    const sql = `SELECT * FROM Eventos WHERE eve_nombre LIKE ?`;
+    const [rows] = await connection.execute(sql, [`%${nombre}%`]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron eventos con ese nombre' });
+    }
+
+    res.status(200).json(rows); // Devuelve los eventos encontrados
+  } catch (err) {
+    console.error('Error al obtener los eventos:', err);
+    res.status(500).json({ error: 'Error al obtener los eventos' });
+  }
+};
