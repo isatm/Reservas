@@ -9,3 +9,16 @@
     <button class="btn btn-primary" type="button" (click)="agregarSaldo()">Agregar (+)</button>
     <button class="btn btn-primary" type="button" (click)="quitarSaldo()">Quitar (-)</button>
 </div>
+
+<h1>Reservas: </h1>
+<div *ngIf="reservas.length === 0" class="alert alert-info">
+  No tienes reservas.
+</div>
+<div *ngFor="let reserva of reservas" class="card mb-3">
+  <div class="card-body">
+    <h5 class="card-title">{{ reserva.eve_nombre }}</h5>
+    <p class="card-text">Fecha de inicio: {{ reserva.eve_fecha_inicio | date: 'yyyy-MM-dd' }}</p>
+    <p class="card-text">Fecha de final: {{ reserva.eve_fecha_final | date: 'yyyy-MM-dd' }}</p>
+    <p class="card-text">Fecha de compra: {{ reserva.res_fecha_compra | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
+  </div>
+</div>

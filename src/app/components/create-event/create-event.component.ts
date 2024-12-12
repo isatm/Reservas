@@ -1,13 +1,15 @@
+// src/app/create-event/create-event.component.ts
+
 import { Component } from '@angular/core';
 import { EventoService } from '../../services/evento.service';
-import { HttpClientModule } from '@angular/common/http'; 
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-create-event',
   standalone: true,
   imports: [FormsModule, HttpClientModule],
-  providers: [EventoService], 
+  providers: [EventoService],
   templateUrl: './create-event.component.html',
   styleUrls: ['./create-event.component.css'],
 })
@@ -23,7 +25,7 @@ export class CreateEventComponent {
 
   agregarOrganizador(id: number): void {
     if (!this.organizadores.includes(id)) {
-      this.organizadores.push(id); 
+      this.organizadores.push(id);
     }
   }
 
@@ -42,7 +44,7 @@ export class CreateEventComponent {
       alert('No estás autenticado');
       return;
     }
-    
+
     this.eventoService.crearEvento(evento).subscribe(
       (response) => {
         console.log('Evento creado exitosamente:', response);

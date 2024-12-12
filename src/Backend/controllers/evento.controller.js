@@ -11,7 +11,7 @@ export const crearEvento = async (req, res) => {
   }
 
   try {
-    const decoded = jwt.verify(token, 'tu_clave_secreta');
+    const decoded = jwt.verify(token, 'clave_secreta');
     const userId = decoded.id;
 
     const connection = await dbConnect();
@@ -137,5 +137,26 @@ export const crearReserva = async (req, res) => {
   } catch (err) {
     console.error('Error al crear la reserva:', err);
     res.status(500).json({ error: 'Error al crear la reserva' });
+  }
+};
+
+export const obtenerReservasUsuario = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const connection = await dbConnect();
+
+    const sql = `
+      SELECT e.eve_nombre, e.eve_fecha_inicio, e.eve_fecha_final, r.res_fecha_compra
+      FROM Reservas r
+      JOIN Eventos e ON r.res_evento = e.eve_id
+      WHERE r.res_usuario = ? AND r.res_cancelada = 0;
+    `;
+    const [rows] = await connection.execute(sql, [userId]);
+
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error('Error al obtener las reservas del usuario:', err);
+    res.status(500).json({ error: 'Error al obtener las reservas del usuario' });
   }
 };

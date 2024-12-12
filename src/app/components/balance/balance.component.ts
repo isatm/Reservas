@@ -1,9 +1,8 @@
-// src/app/saldo/saldo.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
+import { EventoService } from '../../services/evento.service';
 
 @Component({
   selector: 'app-balance',
@@ -15,11 +14,13 @@ import { UserService } from '../../services/user.service';
 export class BalanceComponent implements OnInit {
   saldo: number = 0;
   monto: number = 0;
+  reservas: any[] = [];
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private eventoService: EventoService) {}
 
   ngOnInit(): void {
     this.getSaldo();
+    this.obtenerReservasUsuario();
   }
 
   getSaldo(): void {
@@ -57,5 +58,16 @@ export class BalanceComponent implements OnInit {
         }
       );
     }
+  }
+
+  obtenerReservasUsuario(): void {
+    this.eventoService.obtenerReservasUsuario().subscribe(
+      data => {
+        this.reservas = data;
+      },
+      error => {
+        console.error('Error fetching reservas', error);
+      }
+    );
   }
 }
