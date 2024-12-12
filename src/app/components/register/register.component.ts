@@ -20,7 +20,7 @@ export class RegisterComponent {
   isLoading: boolean = false;
 
   selectRole(role: string): void {
-    this.role = role;  // Actualiza el valor del rol
+    this.role = role; 
   }
 
   constructor(private userService: UserService, private router: Router) {}
@@ -29,7 +29,7 @@ export class RegisterComponent {
     
     if (!this.username || !this.password || !this.correo || !this.role) {
       alert('Por favor, complete todos los campos antes de continuar.');
-      return; // Detener el proceso si falta algún campo
+      return; 
     }
     const usuario = {
       username: this.username,

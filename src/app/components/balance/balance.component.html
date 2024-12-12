@@ -1,0 +1,11 @@
+<h1>Saldo: </h1>
+<h1>{{ saldo }}</h1>
+
+<div class="col">
+    <input type="number" class="form-control" placeholder="Monto" aria-label="Monto" [(ngModel)]="monto">
+</div>
+
+<div class="d-grid gap-2 col-6 mx-auto">
+    <button class="btn btn-primary" type="button" (click)="agregarSaldo()">Agregar (+)</button>
+    <button class="btn btn-primary" type="button" (click)="quitarSaldo()">Quitar (-)</button>
+</div>

@@ -16,7 +16,7 @@ import { RouterModule } from '@angular/router';
 export class HomeComponent {
   evento: any[] = [];
   eventosFiltrados: any[] = [];
-  busqueda: string = ''; // Variable para almacenar la búsqueda
+  busqueda: string = ''; 
 
   constructor(private EventoService: EventoService) {}
 
@@ -24,8 +24,8 @@ export class HomeComponent {
     this.EventoService.obtenerEvento(false).subscribe({
       next: (data) => {
         console.log(data);
-        this.evento = data; // Guardar todos los eventos
-        this.eventosFiltrados = data; // Inicializar la lista filtrada
+        this.evento = data; 
+        this.eventosFiltrados = data; 
       },
       error: (err) => {
         console.error('Error fetching events:', err);
@@ -34,10 +34,9 @@ export class HomeComponent {
   }
 
   filtrarEventos(event: Event): void {
-    event.preventDefault(); // Evita el comportamiento por defecto del formulario
+    event.preventDefault(); 
     const busquedaLower = this.busqueda.toLowerCase();
 
-    // Filtrar eventos según el término de búsqueda
     this.eventosFiltrados = this.evento.filter((e) =>
       e.eve_nombre.toLowerCase().includes(busquedaLower) ||
       e.eve_descripcion.toLowerCase().includes(busquedaLower)

@@ -19,12 +19,11 @@ export class MyEventsComponent {
 
   constructor(private EventoService: EventoService) {}
 
-  // home.component.ts
   ngOnInit(): void {
     this.EventoService.obtenerEvento(false).subscribe({
       next: (data) => {
         console.log(data);
-        this.evento = data; // Guardar los datos en la variable
+        this.evento = data;
       },
       error: (err) => {
         console.error('Error fetching events:', err);

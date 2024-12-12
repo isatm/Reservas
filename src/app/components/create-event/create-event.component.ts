@@ -23,7 +23,7 @@ export class CreateEventComponent {
 
   agregarOrganizador(id: number): void {
     if (!this.organizadores.includes(id)) {
-      this.organizadores.push(id); // Añadir organizador al array
+      this.organizadores.push(id); 
     }
   }
 
@@ -36,15 +36,13 @@ export class CreateEventComponent {
       precio: this.precio,
     };
 
-    // Obtener el token de localStorage
     const token = localStorage.getItem('token');
 
     if (!token) {
       alert('No estás autenticado');
       return;
     }
-
-    // Llamar al servicio para crear el evento, pasando el token en los encabezados
+    
     this.eventoService.crearEvento(evento).subscribe(
       (response) => {
         console.log('Evento creado exitosamente:', response);

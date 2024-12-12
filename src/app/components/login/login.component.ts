@@ -10,13 +10,13 @@ import { Router } from '@angular/router'; // Importa Router
   imports: [FormsModule, HttpClientModule],
   providers: [UserService],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'] // Corregido el nombre de la propiedad
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   username: string = '';
   password: string = '';
 
-  constructor(private userService: UserService, private router: Router) {} // Inyecta el router
+  constructor(private userService: UserService, private router: Router) {} 
 
   navegarARegister() {
     this.router.navigate(['/register']);
@@ -32,7 +32,7 @@ export class LoginComponent {
     };
     if (!this.username || !this.password) {
       alert('Por favor, complete todos los campos antes de iniciar sesión.');
-      return; // Detener el flujo si los campos están vacíos
+      return; 
     }
 
     this.userService.loginUsuario(user).subscribe(

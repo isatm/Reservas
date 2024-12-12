@@ -1,22 +1,20 @@
+// user.controller.js
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { dbConnect } from '../config/db.js';
 
-const SECRET_KEY = 'tu_clave_secreta';
+const SECRET_KEY = 'clave_secreta';
 
 export const crearUsuario = async (req, res) => {
   const { username, password, correo, role } = req.body;
 
   try {
-    // Conectar a la base de datos
     const connection = await dbConnect();
 
-    // Encriptar la contraseña antes de guardarla
-    const saltRounds = 10; // Determina la cantidad de rondas de sal (cuanto más alto, más seguro, pero más lento)
+    const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Consulta SQL para insertar el usuario
-    const sql = 
+    const sql =
       `INSERT INTO Usuarios (usu_nombre, usu_contrasena, usu_correo, usu_saldo, usu_rol)
       VALUES (?, ?, ?, ?, ?)`;
     const values = [username, hashedPassword, correo, 0, role];
@@ -33,10 +31,8 @@ export const iniciarSesion = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    // Conectar a la base de datos
     const connection = await dbConnect();
 
-    // Consulta SQL para buscar el usuario por nombre de usuario
     const sql = `SELECT usu_id, usu_nombre, usu_contrasena FROM Usuarios WHERE usu_nombre = ?`;
     const [rows] = await connection.execute(sql, [username]);
 
@@ -46,29 +42,64 @@ export const iniciarSesion = async (req, res) => {
 
     const user = rows[0];
 
-    // Comparar la contraseña ingresada con la contraseña encriptada en la base de datos
     const isMatch = await bcrypt.compare(password, user.usu_contrasena);
 
     if (!isMatch) {
       return res.status(401).json({ error: 'Contraseña incorrecta' });
     }
 
-    // Si las credenciales son correctas, generamos el token
     const token = jwt.sign(
-      { id: user.usu_id, username: user.usu_nombre }, // Información del usuario para incluir en el token
-      SECRET_KEY, // La clave secreta para firmar el token
-      { expiresIn: '1h' } // El token expira en 1 hora (puedes ajustar este tiempo)
+      { id: user.usu_id, username: user.usu_nombre },
+      SECRET_KEY,
+      { expiresIn: '1h' }
     );
 
-    // Enviar el token al frontend
     res.status(200).json({
       message: 'Inicio de sesión exitoso',
-      token: token, // Enviar el token generado
+      token: token,
     });
 
   } catch (err) {
     console.error('Error al iniciar sesión:', err);
     res.status(500).json({ error: 'Error al iniciar sesión' });
+  }
+};
+
+export const obtenerSaldo = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const connection = await dbConnect();
+
+    const sql = `SELECT usu_saldo FROM Usuarios WHERE usu_id = ?`;
+    const [rows] = await connection.execute(sql, [userId]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    res.status(200).json({ saldo: rows[0].usu_saldo });
+  } catch (err) {
+    console.error('Error al obtener el saldo:', err);
+    res.status(500).json({ error: 'Error al obtener el saldo' });
+  }
+};
+
+export const actualizarSaldo = async (req, res) => {
+  const userId = req.user.id;
+  const { amount } = req.body;
+
+  try {
+    const connection = await dbConnect();
+
+    const sql = `UPDATE Usuarios SET usu_saldo = usu_saldo + ? WHERE usu_id = ?`;
+    const values = [amount, userId];
+    await connection.execute(sql, values);
+
+    res.status(200).json({ message: 'Saldo actualizado' });
+  } catch (err) {
+    console.error('Error al actualizar el saldo:', err);
+    res.status(500).json({ error: 'Error al actualizar el saldo' });
   }
 };
 

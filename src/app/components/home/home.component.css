@@ -1,0 +1,22 @@
+.events{
+    margin-left: 20px;
+    margin-top: 50px;
+    display: flex;
+}
+
+.card{
+    width: 20%;
+    height: 30%;
+    margin-left: 10px;
+    margin-bottom: 5%;
+}
+
+.carousel-inner img {
+    max-height: 650px; 
+    object-fit: cover; 
+}
+
+.carousel {
+    max-width: 800px; 
+    margin: auto; 
+}

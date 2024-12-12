@@ -3,21 +3,18 @@ import jwt from 'jsonwebtoken';  // Para decodificar el token
 
 export const crearEvento = async (req, res) => {
   const { nombre, descripcion, fechaInicio, fechaFinal, precio } = req.body;
-  const token = req.headers['authorization']?.split(' ')[1]; // Obtener el token del encabezado
+  const token = req.headers['authorization']?.split(' ')[1]; 
 
   if (!token) {
     return res.status(401).json({ error: 'No se ha proporcionado un token de autenticación' });
   }
 
   try {
-    // Verificar y decodificar el token
-    const decoded = jwt.verify(token, 'tu_clave_secreta');  // 'mi_secreto' es la clave que usas para firmar el token
-    const userId = decoded.id;  // Suponiendo que el id del usuario está en el payload del token
+    const decoded = jwt.verify(token, 'tu_clave_secreta');  
+    const userId = decoded.id;  
 
-    // Conectar a la base de datos
     const connection = await dbConnect();
 
-    // Consulta SQL para insertar el evento
     const sql = `
       INSERT INTO Eventos (eve_nombre, eve_descripcion, eve_fecha_inicio, eve_fecha_final, eve_precio)
       VALUES (?, ?, ?, ?, ?)
@@ -27,7 +24,6 @@ export const crearEvento = async (req, res) => {
 
     const eventoId = result.insertId;
 
-    // Insertar el organizador (usuario que creó el evento) en la tabla intermedia Organizadores
     const sqlOrganizador = `
       INSERT INTO Organizadores (org_evento, org_organizador)
       VALUES (?, ?)
@@ -46,9 +42,8 @@ export const obtenerEvento = async (req, res) => {
     const token = req.headers['authorization']?.split(' ')[1];
     let userId = null;
 
-    // Si el parámetro 'user' está presente, intentamos obtener el userId del token
     if (req.query.user && token) {
-      const decoded = jwt.verify(token, 'tu_clave_secreta');  // 'mi_secreto' es la clave que usas para firmar el token
+      const decoded = jwt.verify(token, 'clave_secreta');  
       userId = decoded.id;
     }
 
@@ -58,7 +53,6 @@ export const obtenerEvento = async (req, res) => {
     let values = [];
 
     if (userId) {
-      // Si el usuario está autenticado, filtrar eventos solo para ese usuario
       sql = `
         SELECT e.eve_id, e.eve_nombre, e.eve_descripcion, e.eve_precio
         FROM Eventos e
@@ -67,7 +61,6 @@ export const obtenerEvento = async (req, res) => {
       `;
       values = [userId];
     } else {
-      // Si no está autenticado, mostrar todos los eventos
       sql = `
         SELECT e.eve_id, e.eve_nombre, e.eve_descripcion, e.eve_precio
         FROM Eventos e
@@ -89,10 +82,9 @@ export const obtenerEvento = async (req, res) => {
 
 export const obtenerEventoPorId = async (req, res) => {
   try {
-    const { id } = req.params; // Obtén el ID de los parámetros de la URL
+    const { id } = req.params; 
     const connection = await dbConnect();
 
-    // Consulta SQL para obtener un evento específico por ID
     const sql = `SELECT * FROM Eventos WHERE eve_id = ?`;
     const [rows] = await connection.execute(sql, [id]);
 
@@ -100,7 +92,7 @@ export const obtenerEventoPorId = async (req, res) => {
       return res.status(404).json({ message: 'Evento no encontrado' });
     }
 
-    res.status(200).json(rows[0]); // Devuelve el evento encontrado
+    res.status(200).json(rows[0]);
   } catch (err) {
     console.error('Error al obtener el evento:', err);
     res.status(500).json({ error: 'Error al obtener el evento' });

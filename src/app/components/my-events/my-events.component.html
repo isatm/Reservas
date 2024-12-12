@@ -1,12 +1,10 @@
 <h1 class="display-3">Mis Eventos</h1>
 
 <div class="events">
-    <!-- Si no hay eventos, mostrar mensaje -->
     <div *ngIf="noEvents" class="alert alert-info">
       No hay eventos disponibles.
     </div>
   
-    <!-- Si hay eventos, mostrar la lista de eventos -->
     <div *ngFor="let event of evento" class="card">
       <div class="card-body">
         <h5 class="card-title">{{ event.eve_nombre }}</h5>

@@ -44,12 +44,10 @@
   </div>
 
   <div class="events mt-4">
-    <!-- Si no hay eventos después de filtrar, mostrar mensaje -->
     <div *ngIf="eventosFiltrados.length === 0" class="alert alert-info">
       No hay eventos disponibles.
     </div>
   
-    <!-- Mostrar eventos filtrados -->
     <div *ngFor="let event of eventosFiltrados" class="card">
       <div class="card-body">
         <h5 class="card-title">{{ event.eve_nombre }}</h5>
