@@ -1,17 +1,18 @@
+// evento.controller.js
 import { dbConnect } from '../config/db.js';
 import jwt from 'jsonwebtoken';  // Para decodificar el token
 
 export const crearEvento = async (req, res) => {
   const { nombre, descripcion, fechaInicio, fechaFinal, precio } = req.body;
-  const token = req.headers['authorization']?.split(' ')[1]; 
+  const token = req.headers['authorization']?.split(' ')[1];
 
   if (!token) {
     return res.status(401).json({ error: 'No se ha proporcionado un token de autenticación' });
   }
 
   try {
-    const decoded = jwt.verify(token, 'tu_clave_secreta');  
-    const userId = decoded.id;  
+    const decoded = jwt.verify(token, 'tu_clave_secreta');
+    const userId = decoded.id;
 
     const connection = await dbConnect();
 
@@ -43,7 +44,7 @@ export const obtenerEvento = async (req, res) => {
     let userId = null;
 
     if (req.query.user && token) {
-      const decoded = jwt.verify(token, 'clave_secreta');  
+      const decoded = jwt.verify(token, 'clave_secreta');
       userId = decoded.id;
     }
 
@@ -82,7 +83,7 @@ export const obtenerEvento = async (req, res) => {
 
 export const obtenerEventoPorId = async (req, res) => {
   try {
-    const { id } = req.params; 
+    const { id } = req.params;
     const connection = await dbConnect();
 
     const sql = `SELECT * FROM Eventos WHERE eve_id = ?`;
@@ -96,5 +97,45 @@ export const obtenerEventoPorId = async (req, res) => {
   } catch (err) {
     console.error('Error al obtener el evento:', err);
     res.status(500).json({ error: 'Error al obtener el evento' });
+  }
+};
+
+export const crearReserva = async (req, res) => {
+  const userId = req.user.id;
+  const eventId = req.params.id;
+
+  try {
+    const connection = await dbConnect();
+
+    // Obtener el precio del evento
+    const sqlPrecio = `SELECT eve_precio FROM Eventos WHERE eve_id = ?`;
+    const [rowsPrecio] = await connection.execute(sqlPrecio, [eventId]);
+    const precioEvento = rowsPrecio[0].eve_precio;
+
+    // Obtener el saldo del usuario
+    const sqlSaldo = `SELECT usu_saldo FROM Usuarios WHERE usu_id = ?`;
+    const [rowsSaldo] = await connection.execute(sqlSaldo, [userId]);
+    const saldoUsuario = rowsSaldo[0].usu_saldo;
+
+    // Verificar si el usuario tiene saldo suficiente
+    if (saldoUsuario < precioEvento) {
+      return res.status(400).json({ error: 'Saldo insuficiente para comprar este evento' });
+    }
+
+    // Crear la reserva
+    const sqlReserva = `INSERT INTO Reservas (res_evento, res_usuario, res_fecha_compra, res_cancelada)
+                        VALUES (?, ?, NOW(), 0)`;
+    const valuesReserva = [eventId, userId];
+    await connection.execute(sqlReserva, valuesReserva);
+
+    // Actualizar el saldo del usuario
+    const nuevoSaldo = saldoUsuario - precioEvento;
+    const sqlActualizarSaldo = `UPDATE Usuarios SET usu_saldo = ? WHERE usu_id = ?`;
+    await connection.execute(sqlActualizarSaldo, [nuevoSaldo, userId]);
+
+    res.status(200).json({ message: 'Reserva creada exitosamente' });
+  } catch (err) {
+    console.error('Error al crear la reserva:', err);
+    res.status(500).json({ error: 'Error al crear la reserva' });
   }
 };
