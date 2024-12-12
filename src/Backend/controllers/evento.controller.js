@@ -160,3 +160,46 @@ export const obtenerReservasUsuario = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener las reservas del usuario' });
   }
 };
+
+export const filtrar = async (req, res) => {
+  console.log('req.body:', req.body);
+  try {
+    const { nombre, fechaInicio, fechaFinal, precio } = req.body;
+    const connection = await dbConnect();
+
+
+    let sql = 'SELECT * FROM Eventos WHERE 1=1';
+    const params = [];
+
+    if (nombre != null && nombre != undefined) {
+      sql += ' AND eve_nombre LIKE ?';  
+      params.push(`%${nombre}%`);
+    }
+
+    if (fechaInicio != null && fechaInicio  != undefined) {
+      sql += ' AND eve_fecha >= ?';
+      params.push(fechaInicio);
+    }
+
+    if (fechaFinal != null && fechaFinal != undefined) {
+      sql += ' AND eve_fecha <= ?';
+      params.push(fechaFinal);
+    }
+
+    if (precio != null && precio!= undefined) {
+      sql += ' AND eve_precio = ?';
+      params.push(precio);
+    }
+
+    const [rows] = await connection.execute(sql, params);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron eventos con los criterios especificados' });
+    }
+
+    res.status(200).json(rows); // Devuelve los eventos encontrados
+  } catch (err) {
+    console.error('Error al filtrar los eventos:', err);
+    res.status(500).json({ error: 'Error al filtrar los eventos' });
+  }
+};

@@ -8,6 +8,8 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.json()); // Este middleware es crucial para solicitudes con cuerpo JSON
+
 
 app.use(eventoRoutes);
 app.use(userRoutes);
