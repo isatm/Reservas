@@ -5,7 +5,7 @@ export const dbConnect = async () => {
     const connection = await mysql.createConnection({
       host: 'localhost',
       user: 'ingeniero',
-      password: 'hola123',
+      password: '123',
       database: 'reservas',
     });
     console.log('Conexión establecida con la base de datos.');

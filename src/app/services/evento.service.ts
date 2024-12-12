@@ -1,5 +1,7 @@
+// src/app/services/evento.service.ts
+
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -45,12 +47,12 @@ export class EventoService {
     return this.http.post(`${this.apiUrl}/${eventId}/reservas`, {}, { headers });
   }
 
-  obtenerReservasUsuario(userId: string): Observable<any> {
+  obtenerReservasUsuario(): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any>(`${this.apiUrl}/reservas/${userId}`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/reservas`, { headers });
   }
-  
+
   filtrarEventos(filtros: any): Observable<any> {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -63,6 +65,26 @@ export class EventoService {
 
     return this.http.post<any>(`${this.apiUrl}/filter`, filtros, { headers });
   }
+
+  modificarEvento(id: string, evento: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No se encontró un token de autenticación');
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.put(`${this.apiUrl}/${id}`, evento, { headers });
+  }
+
+  eliminarEvento(id: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No se encontró un token de autenticación');
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.delete(`${this.apiUrl}/${id}`, { headers });
+  }
 }
-
-

@@ -2,6 +2,8 @@
 import { dbConnect } from '../config/db.js';
 import jwt from 'jsonwebtoken';  // Para decodificar el token
 
+const SECRET_KEY = 'clave_secreta';  // Asegúrate de que esta clave sea la misma que usas para firmar el token
+
 export const crearEvento = async (req, res) => {
   const { nombre, descripcion, fechaInicio, fechaFinal, precio } = req.body;
   const token = req.headers['authorization']?.split(' ')[1];
@@ -11,7 +13,7 @@ export const crearEvento = async (req, res) => {
   }
 
   try {
-    const decoded = jwt.verify(token, 'clave_secreta');
+    const decoded = jwt.verify(token, SECRET_KEY);
     const userId = decoded.id;
 
     const connection = await dbConnect();
@@ -44,7 +46,7 @@ export const obtenerEvento = async (req, res) => {
     let userId = null;
 
     if (req.query.user && token) {
-      const decoded = jwt.verify(token, 'clave_secreta');
+      const decoded = jwt.verify(token, SECRET_KEY);
       userId = decoded.id;
     }
 
@@ -142,7 +144,7 @@ export const crearReserva = async (req, res) => {
 
 export const obtenerReservasUsuario = async (req, res) => {
   try {
-    const { id } = req.params; // Obtén el ID del usuario desde los parámetros de la URL
+    const userId = req.user.id; // Obtén el ID del usuario desde el token
     const connection = await dbConnect();
 
     const sql = `
@@ -151,7 +153,7 @@ export const obtenerReservasUsuario = async (req, res) => {
       JOIN Eventos e ON r.res_evento = e.eve_id
       WHERE r.res_usuario = ? AND r.res_cancelada = 0;
     `;
-    const [rows] = await connection.execute(sql, [id]);
+    const [rows] = await connection.execute(sql, [userId]);
 
     if (rows.length === 0) {
       return res.status(404).json({ message: 'No se encontraron reservas para este usuario' });
@@ -164,46 +166,88 @@ export const obtenerReservasUsuario = async (req, res) => {
   }
 };
 
-export const filtrar = async (req, res) => {
-  console.log('req.body:', req.body);
+export const modificarEvento = async (req, res) => {
+  const { nombre, descripcion, fechaInicio, fechaFinal, precio } = req.body;
+  const { id } = req.params;
+
   try {
-    const { nombre, fechaInicio, fechaFinal, precio } = req.body;
     const connection = await dbConnect();
 
+    const sql = `
+      UPDATE Eventos
+      SET eve_nombre = ?, eve_descripcion = ?, eve_fecha_inicio = ?, eve_fecha_final = ?, eve_precio = ?
+      WHERE eve_id = ?
+    `;
+    const values = [nombre, descripcion, fechaInicio, fechaFinal, precio, id];
+    await connection.execute(sql, values);
 
-    let sql = 'SELECT * FROM Eventos WHERE 1=1';
-    const params = [];
+    res.status(200).json({ message: 'Evento modificado exitosamente' });
+  } catch (err) {
+    console.error('Error al modificar el evento:', err.message);
+    res.status(500).json({ error: 'Error al modificar el evento', details: err.message });
+  }
+};
 
+export const eliminarEvento = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const connection = await dbConnect();
+
+    const sql = `DELETE FROM Eventos WHERE eve_id = ?`;
+    await connection.execute(sql, [id]);
+
+    res.status(200).json({ message: 'Evento eliminado exitosamente' });
+  } catch (err) {
+    console.error('Error al eliminar el evento:', err.message);
+    res.status(500).json({ error: 'Error al eliminar el evento', details: err.message });
+  }
+};
+
+export const filtrar = async (req, res) => {
+  console.log('req.body:', req.body); // Registro del cuerpo de la solicitud
+  try {
+    const { nombre, fechaInicio, fechaFinal, precio } = req.body; // Desestructuración de parámetros
+    const connection = await dbConnect(); // Conexión a la base de datos
+
+    let sql = 'SELECT * FROM Eventos WHERE 1=1'; // Consulta SQL
+    const params = []; // Array para almacenar parámetros de consulta
+
+    // Filtra por nombre
     if (nombre != null && nombre != undefined) {
-      sql += ' AND eve_nombre LIKE ?';  
+      sql += ' AND eve_nombre LIKE ?';
       params.push(`%${nombre}%`);
     }
 
-    if (fechaInicio != null && fechaInicio  != undefined) {
+    // Filtra por fecha de inicio
+    if (fechaInicio != null && fechaInicio != undefined) {
       sql += ' AND eve_fecha_inicio >= ?';
       params.push(fechaInicio);
     }
 
+    // Filtra por fecha final
     if (fechaFinal != null && fechaFinal != undefined) {
       sql += ' AND eve_fecha_final <= ?';
       params.push(fechaFinal);
     }
 
-    if (precio != null && precio!= undefined) {
+    // Filtra por precio
+    if (precio != null && precio != undefined) {
       sql += ' AND eve_precio = ?';
       params.push(precio);
     }
 
+    // Ejecución de la consulta
     const [rows] = await connection.execute(sql, params);
 
+    // Verificación de resultados
     if (rows.length === 0) {
       return res.status(404).json({ message: 'No se encontraron eventos con los criterios especificados' });
     }
 
     res.status(200).json(rows); // Devuelve los eventos encontrados
   } catch (err) {
-    console.error('Error al filtrar los eventos:', err);
-    res.status(500).json({ error: 'Error al filtrar los eventos' });
+    console.error('Error al filtrar los eventos:', err); // Registro de errores
+    res.status(500).json({ error: 'Error al filtrar los eventos' }); // Respuesta de error
   }
 };
-

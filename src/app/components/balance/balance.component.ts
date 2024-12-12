@@ -63,7 +63,7 @@ export class BalanceComponent implements OnInit {
 
   obtenerReservasUsuario(): void {
     if (this.userId) {
-      this.eventoService.obtenerReservasUsuario(this.userId).subscribe(
+      this.eventoService.obtenerReservasUsuario().subscribe(
         data => {
           this.reservas = data;
         },
